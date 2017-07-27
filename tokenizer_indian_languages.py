@@ -78,12 +78,12 @@ def read_files_from_folder_and_tokenize(input_folder, output_folder, lang_type):
                 text = file_read.read().strip().replace('.\n', '।\n')
             else:
                 text = file_read.read().strip()
-            sentences = re.findall('.*?।|.*?\n', text, re.UNICODE)
+            sentences = re.findall('.*?।|.*?\n', text + '\n', re.UNICODE)
             count_sentence = 1
             for index, sentence in enumerate(sentences):
                 if sentence.strip() != '':
                     list_tokens = tokenize(sentence.split())
-                    end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in ['?', '.', '۔', '؟']]
+                    end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in ['?', '.', '۔', '؟', '।', '!']]
                     if len(end_sentence_markers) > 0:
                         end_sentence_markers_with_sentence_end_positions = [0] + end_sentence_markers
                         sentence_boundaries = list(zip(end_sentence_markers_with_sentence_end_positions, end_sentence_markers_with_sentence_end_positions[1:]))

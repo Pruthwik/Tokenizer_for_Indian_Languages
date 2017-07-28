@@ -74,12 +74,11 @@ def read_file_and_tokenize(input_file, output_file, lang_type):
         sentences = re.findall('.*?।|.*?\n', text + '\n', re.UNICODE)
         count_sentence = 1
         for index, sentence in enumerate(sentences):
-            print(sentence)
             if sentence.strip() != '':
                 list_tokens = tokenize(sentence.split())
                 end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in ['?', '.', '۔', '؟', '।', '!', '|']]
                 if len(end_sentence_markers) > 0:
-                    if end_sentence_markers != len(list_tokens):
+                    if end_sentence_markers[-1] != len(list_tokens):
                         end_sentence_markers += [len(list_tokens)]
                     end_sentence_markers_with_sentence_end_positions = [0] + end_sentence_markers
                     sentence_boundaries = list(zip(end_sentence_markers_with_sentence_end_positions, end_sentence_markers_with_sentence_end_positions[1:]))

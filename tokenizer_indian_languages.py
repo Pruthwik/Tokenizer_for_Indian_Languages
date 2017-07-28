@@ -85,6 +85,8 @@ def read_files_from_folder_and_tokenize(input_folder, output_folder, lang_type):
                     list_tokens = tokenize(sentence.split())
                     end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in ['?', '.', '۔', '؟', '।', '!']]
                     if len(end_sentence_markers) > 0:
+                        if end_sentence_markers != len(list_tokens):
+                            end_sentence_markers += [len(list_tokens)]
                         end_sentence_markers_with_sentence_end_positions = [0] + end_sentence_markers
                         sentence_boundaries = list(zip(end_sentence_markers_with_sentence_end_positions, end_sentence_markers_with_sentence_end_positions[1:]))
                         for start, end in sentence_boundaries:

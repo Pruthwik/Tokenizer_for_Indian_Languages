@@ -35,7 +35,7 @@ token_specification = [
 ]
 tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
 get_token = re.compile(tok_regex)
-punctuations = punctuation + '\"\'‘’'
+punctuations = punctuation + '\"\'‘’“”'
 
 
 def tokenize(list_s):

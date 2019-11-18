@@ -1,6 +1,9 @@
 # how to run the code
-# python3 tokenizer_for_file.py --input InputFileName --output OutputFileName --lang 0
-# lang = 0 for all languages other than Urdu, lang = 1 for Urdu
+# python3 tokenizer_for_file.py --input Input --output Output
+# works at folder and file levels
+# lang = 0 for languages ['hi', 'or', 'mn', 'as', 'bn', 'pa'], purna biram as sentence end marker
+# lang = 1 for Urdu '۔' sentence end marker
+# lang = 2 for languages ['en', 'gu', 'mr', 'ml', 'kn', 'te', 'ta'] '.' sentence end marker
 import re
 import argparse
 import os
@@ -71,12 +74,21 @@ def tokenize(list_s):
 def read_file_and_tokenize(input_file, lang_type=0):
         file_read = open(input_file, 'r', encoding='utf-8')
         text = file_read.read().strip()
-        sentences = re.findall('.*?।|.*?\n', text + '\n', re.UNICODE)
+        if lang_type == 0:
+            sentences = re.findall('.*?।|.*?\n', text + '\n', re.UNICODE)
+            endMarkers = ['?', '।', '!', '|']
+        elif lang_type == 1:
+            sentences = re.findall('.*?\n', text + '\n', re.UNICODE)
+            endMarkers = ['؟', '!', '|', '۔']
+        else:
+            sentences = re.findall('.*?\n', text + '\n', re.UNICODE)
+            endMarkers = ['?', '.', '!', '|']
         proper_sentences = list()
+        print(endMarkers, lang_type)
         for index, sentence in enumerate(sentences):
             if sentence.strip() != '':
                 list_tokens = tokenize(sentence.split())
-                end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in ['?', '؟', '।', '!', '|']]
+                end_sentence_markers = [index + 1 for index, token in enumerate(list_tokens) if token in endMarkers]
                 if len(end_sentence_markers) > 0:
                     if end_sentence_markers[-1] != len(list_tokens):
                         end_sentence_markers += [len(list_tokens)]
@@ -116,12 +128,26 @@ if __name__ == '__main__':
     if os.path.isdir(args.inp) and not os.path.isdir(args.out):
         os.mkdir(args.out)
     if not os.path.isdir(args.inp):
-        sentences = read_file_and_tokenize(args.inp)
+        langCode = args.inp[args.inp.find('.') + 1:][: 2]
+        if langCode in ['hi', 'or', 'mn', 'as', 'bn', 'pa']:
+            lang = 0
+        elif langCode == 'ur':
+            lang = 1
+        elif langCode in ['en', 'gu', 'mr', 'ml', 'kn', 'te', 'ta']:
+            lang = 2
+        sentences = read_file_and_tokenize(args.inp, lang)
         write_list_to_file(args.out, sentences)
     else:
         for root, dirs, files in os.walk(args.inp):
             for fl in files:
                 inputFilePath = os.path.join(root, fl)
-                sentences = read_file_and_tokenize(inputFilePath)
+                langCode = args.input[fl.find('.') + 1:][: 2]
+                if langCode in ['hi', 'or', 'mn', 'as', 'bn', 'pa']:
+                    lang = 0
+                elif langCode == 'ur':
+                    lang = 1
+                elif langCode in ['en', 'gu', 'mr', 'ml', 'kn', 'te', 'ta']:
+                    lang = 2
+                sentences = read_file_and_tokenize(inputFilePath, lang)
                 outputFilePath = os.path.join(args.out, fl)
                 write_list_to_file(outputFilePath, sentences)

@@ -23,7 +23,7 @@ token_specification = [
     ('END', r'[;!_]'),           # Statement terminator
     ('EQUAL', r'='),   # Equals
     ('OP', r'[+*\/\-]'),    # Arithmetic operators
-    ('QUOTES', r'[\"\'‘’]'),          # quotes
+    ('QUOTES', r'[\"\'‘’“”]'),          # quotes
     ('Fullstop', r'(\.+)$'),
     ('ellips', r'\.(\.)+'),
     ('HYPHEN', r'[-+\|+]'),

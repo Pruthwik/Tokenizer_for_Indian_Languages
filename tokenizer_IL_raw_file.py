@@ -124,11 +124,13 @@ if __name__ == '__main__':
         '--input', dest='inp', help="enter the input file path")
     parser.add_argument(
         '--output', dest='out', help="enter the output file path")
+    parser.add_argument(
+        '--lang', dest='lang', help="enter the language code, 2 lettered ISO 639-1 language codes")
     args = parser.parse_args()
     if os.path.isdir(args.inp) and not os.path.isdir(args.out):
         os.mkdir(args.out)
+    langCode = args.lang
     if not os.path.isdir(args.inp):
-        langCode = args.inp[args.inp.find('.') + 1:][: 2]
         if langCode in ['hi', 'or', 'mn', 'as', 'bn', 'pa']:
             lang = 0
         elif langCode == 'ur':
@@ -141,7 +143,6 @@ if __name__ == '__main__':
         for root, dirs, files in os.walk(args.inp):
             for fl in files:
                 inputFilePath = os.path.join(root, fl)
-                langCode = args.input[fl.find('.') + 1:][: 2]
                 if langCode in ['hi', 'or', 'mn', 'as', 'bn', 'pa']:
                     lang = 0
                 elif langCode == 'ur':

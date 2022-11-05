@@ -26,7 +26,8 @@ token_specification = [
     ('url1', r'(www\.)([-a-z0-9]+\.)*([-a-z0-9]+.*)(\/[-a-z0-9]+)*/i'),
     ('url', r'/((?:https?\:\/\/|www\.)(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i'),
     ('BRACKET', r'[\(\)\[\]\{\}]'),       # Brackets
-    ('NUMBER', r'^(\d+)([,\.]\d+)*(\w)*'),  # Integer or decimal number
+    ('urdu_year', r'^(ء)(\d{4,4})'),
+    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\w)*'),  # Integer or decimal number
     ('ASSIGN', r'[~:]'),          # Assignment operator
     ('END', r'[;!_]'),           # Statement terminator
     ('EQUAL', r'='),   # Equals
@@ -38,12 +39,18 @@ token_specification = [
     ('Slashes', r'[\\\/]'),
     ('COMMA12', r'[,%]'),
     ('hin_stop', r'।'),
+    ('urdu_stop', r'۔'),
+    ('urdu_comma', r'،'),
+    ('urdu_semicolon', r'؛'),
+    ('urdu_question_mark', r'؟'),
+    ('urdu_percent', r'٪'),
     ('quotes_question', r'[”\?]'),
-    ('hashtag', r'#')
+    ('hashtag', r'#'),
+    ('join', r'–')
 ]
 # the below code converts the above expression into a python regex
 tok_regex = '|'.join('(?P<%s>%s)' % pair for pair in token_specification)
-get_token = re.compile(tok_regex)
+get_token = re.compile(tok_regex, re.U)
 punctuations = punctuation + '\"\'‘’“”'
 
 
@@ -57,7 +64,11 @@ def tokenize(list_s):
         while initial_pos <= (wrds_len - 1):
             mo = get_token.match(wrds, initial_pos)
             if mo is not None and len(mo.group(0)) == wrds_len:
-                tkns.append(wrds)
+                if mo.lastgroup == 'urdu_year':
+                    tkns.append(wrds[: -4])
+                    tkns.append(wrds[-4:])
+                else:
+                    tkns.append(wrds)
                 initial_pos = wrds_len
             else:
                 match_out = get_token.search(wrds, initial_pos)

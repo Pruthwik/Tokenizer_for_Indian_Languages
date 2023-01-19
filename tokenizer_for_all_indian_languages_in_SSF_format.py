@@ -89,6 +89,30 @@ def tokenize(list_s):
     return tkns
 
 
+def proper_bullet_creation(text, pattern):
+    """Create proper bullet points after removing spaces between them."""
+    text = re.sub('\s{2,}', ' ', text)
+    updated_text = ''
+    bullet_patterns = re.finditer(pattern, text)
+    bullet_patterns = list(bullet_patterns)
+    if not bullet_patterns:
+        updated_text = text
+    else:
+        prev_end = -100000
+        for bullet_pattern in bullet_patterns:
+            start, end = bullet_pattern.start(), bullet_pattern.end()
+            if start == prev_end:
+                updated_text = updated_text.strip()
+                updated_text += bullet_pattern.group(1)
+            else:
+                updated_text += text[prev_end: start]
+                updated_text += bullet_pattern.group(1)
+            prev_end = end
+        if end != len(text):
+            updated_text += text[end:]
+    return updated_text
+
+
 def read_lines_from_file(file_path):
     """Read lines from a file."""
     with open(file_path, 'r', encoding='utf-8') as file_read:
@@ -99,6 +123,8 @@ def read_file_and_tokenize(input_file, lang_type=0):
     """Read a file and tokenize its content by specifying the input file path and language type."""
     file_read = open(input_file, 'r', encoding='utf-8')
     lines = read_lines_from_file(input_file)
+    pattern = '(\d+\.?\s?)'
+    lines = [proper_bullet_creation(line, pattern) for line in lines]
     text = '\n'.join(lines)
     if lang_type == 0:
         sentences = re.findall('.*?।|.*?\n', text + '\n', re.UNICODE)

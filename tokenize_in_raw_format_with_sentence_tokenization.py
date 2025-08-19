@@ -1,5 +1,6 @@
+"""Tokenization for all Indian languages in raw format."""
 # how to run the code
-# python3 tokenizer_for_all_indian_languages_in_raw_format.py --input Input --output Output --lang lang
+# python3 tokenize_in_raw_format_with_sentence_tokenization.py --input Input --output Output --lang lang
 # works at folder and file levels
 # lang = 0 for languages ['hi', 'or', 'mn', 'as', 'bn', 'pa'], purna biram as sentence end marker
 # lang = 1 for Urdu and Kashmiri '۔' sentence end marker
@@ -27,6 +28,7 @@ token_specification = [
     ('url', r'/((?:https?\:\/\/|www\.)(?:[-a-z0-9]+\.)*[-a-z0-9]+.*)/i'),
     ('BRACKET', r'[\(\)\[\]\{\}]'),       # Brackets
     ('urdu_year', r'^(ء)(\d{4,4})'),
+    ('bullets', r'(\d+\.)$'), # Bullets
     ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\w)*'),  # Integer or decimal number
     ('ASSIGN', r'[~:]'),          # Assignment operator
     ('END', r'[;!_]'),           # Statement terminator
@@ -74,13 +76,13 @@ def tokenize(list_s):
                 match_out = get_token.search(wrds, initial_pos)
                 if match_out is not None:
                     end_pos = match_out.end()
-                    if match_out.lastgroup == "NUMBER":
+                    if match_out.lastgroup in ["NUMBER", "bullets"]:
                         aa = wrds[initial_pos:(end_pos)]
                     else:
                         aa = wrds[initial_pos:(end_pos - 1)]
                     if aa != '':
                         tkns.append(aa)
-                    if match_out.lastgroup != "NUMBER":
+                    if match_out.lastgroup not in ["NUMBER", "bullets"]:
                         tkns.append(match_out.group(0))
                     initial_pos = end_pos
                 else:
@@ -178,7 +180,7 @@ def main():
     parser.add_argument(
         '--output', dest='out', help="enter the output file path")
     parser.add_argument(
-        '--lang', dest='lang', help="enter the language code, 2 lettered ISO 639-1 language codes")
+        '--lang', dest='lang', help="enter the language code, 2 lettered ISO 639-1 language codes", default='hi')
     args = parser.parse_args()
     if os.path.isdir(args.inp) and not os.path.isdir(args.out):
         os.mkdir(args.out)

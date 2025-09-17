@@ -22,7 +22,7 @@ token_specification = [
     ('BRACKET', r'[\(\)\[\]\{\}]'),       # Brackets
     ('urdu_year', r'^(ء)(\d{4,4})'),
     ('bullets', r'(\d+\.)$'),
-    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\w)*'),  # Integer or decimal number
+    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\S)*'),  # Integer or decimal number
     ('ASSIGN', r'[~:]'),          # Assignment operator
     ('END', r'[;!_]'),           # Statement terminator
     ('EQUAL', r'='),   # Equals
@@ -49,9 +49,10 @@ get_token = re.compile(tok_regex)
 punctuations = punctuation + '\"\'‘’“”'
 
 
-def tokenize(list_s):
+def tokenize(text):
     """Tokenize a list of tokens."""
     tkns = []
+    list_s = text.split()
     for wrds in list_s:
         wrds_len = len(wrds)
         initial_pos = 0

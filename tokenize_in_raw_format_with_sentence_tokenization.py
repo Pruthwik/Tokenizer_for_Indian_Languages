@@ -29,7 +29,7 @@ token_specification = [
     ('BRACKET', r'[\(\)\[\]\{\}]'),       # Brackets
     ('urdu_year', r'^(ء)(\d{4,4})'),
     ('bullets', r'(\d+\.)$'), # Bullets
-    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\w)*'),  # Integer or decimal number
+    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\S)*'),  # Integer or decimal number
     ('ASSIGN', r'[~:]'),          # Assignment operator
     ('END', r'[;!_]'),           # Statement terminator
     ('EQUAL', r'='),   # Equals

@@ -22,7 +22,7 @@ token_specification = [
     ('BRACKET', r'[\(\)\[\]\{\}]'),       # Brackets
     ('urdu_year', r'^(ء)(\d{4,4})'),
     ('bullets', r'(\d+\.)$'),
-    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\w)*'),  # Integer or decimal number
+    ('NUMBER', r'^(\d+)([,\.٫٬]\d+)*(\S)*'),  # Integer or decimal number
     ('ASSIGN', r'[~:]'),          # Assignment operator
     ('END', r'[;!_]'),           # Statement terminator
     ('EQUAL', r'='),   # Equals
@@ -91,8 +91,7 @@ def read_lines_from_file(file_path):
 
 
 def read_file_and_tokenize(input_file):
-    """Read a file and tokenize its content by specifying the input file path and language type."""
-    file_read = open(input_file, 'r', encoding='utf-8')
+    """Read a file and tokenize its content by specifying the input file path."""
     lines = read_lines_from_file(input_file)
     sentences = lines
     proper_sentences = []

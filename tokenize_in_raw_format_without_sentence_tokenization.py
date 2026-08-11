@@ -100,11 +100,11 @@ def read_file_and_tokenize(input_file):
     for index, sentence in enumerate(sentences):
         sentence = sentence.strip()
         if sentence:
-            list_tokens = tokenize(sentence.split())
+            list_tokens = tokenize(sentence)
             proper_sentences.append(' '.join(list_tokens))
             if index < len(sentences) - 1:
                 next_sentence = sentences[index + 1]
-                next_tokens = tokenize(next_sentence.split())
+                next_tokens = tokenize(next_sentence)
                 punct_flag = True
                 for token in next_tokens:
                     punct_flag &= token in punctuations
